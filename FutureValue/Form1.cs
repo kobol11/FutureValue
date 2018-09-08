@@ -33,5 +33,21 @@ namespace FutureValue
         {
             this.Close();
         }
+
+        private void btn_Calculate_Click(object sender, EventArgs e)
+        {
+            decimal monthlyInvestment = Convert.ToDecimal(txb_MonthlyInvestment.Text);
+            decimal yearlyInterestRate = Convert.ToDecimal(txb_YearlyInterestRate.Text);
+            int years = Convert.ToInt32(txb_NoOfYears.Text);
+
+            int months = 12 * years;
+            decimal monthlyInterestRate = (yearlyInterestRate / 12) / 100;
+
+            decimal futureValue = CalculateFutureValue(monthlyInvestment, monthlyInterestRate, months);
+
+            txb_FutureValue.Text = futureValue.ToString("c");
+
+            txb_MonthlyInvestment.Focus();
+        }
     }
 }

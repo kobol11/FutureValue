@@ -12,6 +12,8 @@ namespace FutureValue
 {
     public partial class Form1 : Form
     {
+        int row = 0;
+        string[,] dataEntry = new string[10, 4];
         public Form1()
         {
             InitializeComponent();
@@ -31,6 +33,16 @@ namespace FutureValue
 
         private void btn_Exit_Click(object sender, EventArgs e)
         {
+            string display = "Inv/Mo." + "\t" + "Rate" + "\t" + "Years" + "\t" + "Future Value" + "\n";
+            for(int i = 0; i < dataEntry.GetLength(0); i++)
+            {
+                for (int j = 0; j < dataEntry.GetLength(1); j++)
+                {
+                    display += dataEntry[i, j] + "\t";
+                }
+                display += "\n";
+            }
+            MessageBox.Show(display, "Future Value Calculations");
             this.Close();
         }
 
@@ -49,6 +61,13 @@ namespace FutureValue
                     decimal futureValue = CalculateFutureValue(monthlyInvestment, monthlyInterestRate, months);
 
                     txb_FutureValue.Text = futureValue.ToString("c");
+
+                    dataEntry[row, 0] = monthlyInvestment.ToString("c2");
+                    dataEntry[row, 1] = yearlyInterestRate.ToString("p1");
+                    dataEntry[row, 2] = years.ToString();
+                    dataEntry[row, 3] = futureValue.ToString("c2");
+                    row++;
+
 
                     txb_MonthlyInvestment.Focus();
                 }

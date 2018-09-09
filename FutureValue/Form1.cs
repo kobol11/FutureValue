@@ -36,18 +36,76 @@ namespace FutureValue
 
         private void btn_Calculate_Click(object sender, EventArgs e)
         {
-            decimal monthlyInvestment = Convert.ToDecimal(txb_MonthlyInvestment.Text);
-            decimal yearlyInterestRate = Convert.ToDecimal(txb_YearlyInterestRate.Text);
-            int years = Convert.ToInt32(txb_NoOfYears.Text);
+            try {
+                if (IsValidData())
+                {
+                    decimal monthlyInvestment = Convert.ToDecimal(txb_MonthlyInvestment.Text);
+                    decimal yearlyInterestRate = Convert.ToDecimal(txb_YearlyInterestRate.Text);
+                    int years = Convert.ToInt32(txb_NoOfYears.Text);
 
-            int months = 12 * years;
-            decimal monthlyInterestRate = (yearlyInterestRate / 12) / 100;
+                    int months = 12 * years;
+                    decimal monthlyInterestRate = (yearlyInterestRate / 12) / 100;
 
-            decimal futureValue = CalculateFutureValue(monthlyInvestment, monthlyInterestRate, months);
+                    decimal futureValue = CalculateFutureValue(monthlyInvestment, monthlyInterestRate, months);
 
-            txb_FutureValue.Text = futureValue.ToString("c");
+                    txb_FutureValue.Text = futureValue.ToString("c");
 
-            txb_MonthlyInvestment.Focus();
+                    txb_MonthlyInvestment.Focus();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Please enter a valid entry", "Entry Error");
+            }
+        } 
+
+        public bool IsPresent(TextBox textbox, string name)
+        {
+            if(textbox.Text == "")
+            {
+                MessageBox.Show(name + " is a required field.", "Entry Error");
+                textbox.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        public bool IsDecimal(TextBox textbox, string name)
+        {
+            decimal number = 0;
+            if(Decimal.TryParse(textbox.Text, out number))
+            {
+                return true;
+            }
+            else
+            {
+                MessageBox.Show(name + " must be a decimal value.", "Entry Error");
+                return false;
+            }
+        }
+
+        public bool IsInt32(TextBox textbox, string name)
+        {
+            int number = 0;
+            if (int.TryParse(textbox.Text, out number))
+            {
+                return true;
+            }
+            else
+            {
+                MessageBox.Show(name + " must be an integer value.", "Entry Error");
+                return false;
+            }
+        }
+
+        public bool IsValidData()
+        {
+            return IsPresent(txb_MonthlyInvestment, "Monthly Investment") &&
+                    IsDecimal(txb_MonthlyInvestment, "Monthly Investment") &&
+                    IsPresent(txb_YearlyInterestRate, "Yearly Interest Rate") &&
+                    IsDecimal(txb_YearlyInterestRate, "Yearly Interest Rate") &&
+                    IsPresent(txb_NoOfYears, "Number of Years") &&
+                    IsInt32(txb_NoOfYears, "Number of Years");
         }
     }
 }

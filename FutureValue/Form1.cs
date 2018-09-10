@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace FutureValue
 {
@@ -51,8 +52,12 @@ namespace FutureValue
             try {
                 if (IsValidData())
                 {
-                    decimal monthlyInvestment = Convert.ToDecimal(txb_MonthlyInvestment.Text);
-                    decimal yearlyInterestRate = Convert.ToDecimal(txb_YearlyInterestRate.Text);
+                    decimal monthlyInvestment;
+                     Decimal.TryParse(txb_MonthlyInvestment.Text, NumberStyles.Currency, 
+                         CultureInfo.CurrentCulture, out monthlyInvestment);
+                    decimal yearlyInterestRate;
+                    Decimal.TryParse(txb_YearlyInterestRate.Text, NumberStyles.Currency, 
+                        CultureInfo.CurrentCulture, out yearlyInterestRate);
                     int years = Convert.ToInt32(txb_NoOfYears.Text);
 
                     int months = 12 * years;
@@ -92,7 +97,21 @@ namespace FutureValue
         public bool IsDecimal(TextBox textbox, string name)
         {
             decimal number = 0;
-            if(Decimal.TryParse(textbox.Text, out number))
+            if(Decimal.TryParse(textbox.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out number))
+            {
+                return true;
+            }
+            else
+            {
+                MessageBox.Show(name + " must be a decimal value.", "Entry Error");
+                return false;
+            }
+        }
+
+        public bool IsCurrency(TextBox textbox, string name)
+        {
+            decimal number = 0;
+            if (Decimal.TryParse(textbox.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out number))
             {
                 return true;
             }
@@ -106,7 +125,7 @@ namespace FutureValue
         public bool IsInt32(TextBox textbox, string name)
         {
             int number = 0;
-            if (int.TryParse(textbox.Text, out number))
+            if (int.TryParse(textbox.Text, NumberStyles.None, CultureInfo.CurrentCulture, out number))
             {
                 return true;
             }
@@ -120,7 +139,7 @@ namespace FutureValue
         public bool IsValidData()
         {
             return IsPresent(txb_MonthlyInvestment, "Monthly Investment") &&
-                    IsDecimal(txb_MonthlyInvestment, "Monthly Investment") &&
+                    IsCurrency(txb_MonthlyInvestment, "Monthly Investment") &&
                     IsPresent(txb_YearlyInterestRate, "Yearly Interest Rate") &&
                     IsDecimal(txb_YearlyInterestRate, "Yearly Interest Rate") &&
                     IsPresent(txb_NoOfYears, "Number of Years") &&
